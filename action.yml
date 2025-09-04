@@ -1,14 +1,16 @@
-name: Semantic bump micro version
+name: Semantic Version Bump
 description: Increments the micro portion of a semver version number in a file.
 
 inputs:
-  # who-to-greet: # id of input
-  #   description: Who to greet
-  #   required: true
-  #   default: World
+  target-directory:
+    description: Directory containing the version file
+    required: true
+  target-file:
+    description: Name of the version file (must contain only a semver number, with no additional text, comments, or whitespace)
+    required: true
 
 # No outputs needed - action returns success/failure via exit code
 
 runs:
   using: node24
-  main: dist/index.js
+  main: src/index.js
