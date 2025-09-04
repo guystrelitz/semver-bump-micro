@@ -2,7 +2,7 @@
   "name": "semver-bump-micro",
   "version": "1.0.0",
   "description": "Increments the minor portion of a semver version number in a file.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,9 +10,17 @@
     "type": "git",
     "url": "git+https://github.com/guystrelitz/semver-bump-micro.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "github-actions",
+    "semver",
+    "semantic-versioning",
+    "versioning",
+    "version-bump",
+    "automation",
+    "ci-cd"
+  ],
+  "author": "Guy Strelitz for Sodium Skies Ltd",
+  "license": "MIT",
   "type": "commonjs",
   "bugs": {
     "url": "https://github.com/guystrelitz/semver-bump-micro/issues"
