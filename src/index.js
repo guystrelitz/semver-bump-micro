@@ -1,8 +1,7 @@
-// const { Toolkit } = require('actions-toolkit');
 const fs = require('fs');
 const path = require('path');
 
-const semVerPattern = /^(\d+\.\d+\.)(\d+)/
+const semVerPattern = /^(\d+\.\d+\.)(\d+)/;
 
 try {
   // Read the target file
