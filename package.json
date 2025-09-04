@@ -1,0 +1,25 @@
+{
+  "name": "semver-bump-micro",
+  "version": "1.0.0",
+  "description": "Increments the minor portion of a semver version number in a file.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/guystrelitz/semver-bump-micro.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/guystrelitz/semver-bump-micro/issues"
+  },
+  "homepage": "https://github.com/guystrelitz/semver-bump-micro#readme",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.1"
+  }
+}
