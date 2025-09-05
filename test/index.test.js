@@ -6,6 +6,8 @@ const bumpVersion = require('../src/index.js');
 jest.mock('fs');
 
 describe('bumpVersion', () => {
+  let writeFileSyncSpy, exitSpy, consoleErrorSpy;
+
   beforeEach(() => {
     // Reset all mocks before each test
     jest.clearAllMocks();
@@ -14,6 +16,15 @@ describe('bumpVersion', () => {
     process.env.GITHUB_WORKSPACE = '/fake/workspace';
     process.env.INPUT_TARGET_DIRECTORY = '.';
     process.env.INPUT_TARGET_FILE = 'semver';
+
+    // Set up spies that are the same for all tests
+    writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync');
+    exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {});
+    consoleErrorSpy = jest.spyOn(console, 'error');
+
+    // Mock console methods to avoid noise in test output
+    jest.spyOn(console, 'log').mockImplementation(() => {});
+    jest.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -21,6 +32,10 @@ describe('bumpVersion', () => {
     delete process.env.GITHUB_WORKSPACE;
     delete process.env.INPUT_TARGET_DIRECTORY;
     delete process.env.INPUT_TARGET_FILE;
+
+    // Clean up spies
+    exitSpy.mockRestore();
+    consoleErrorSpy.mockRestore();
   });
 
   describe('happy path: valid version formats', () => {
@@ -32,16 +47,6 @@ describe('bumpVersion', () => {
     ])('should bump version from $input to $expected', ({ input, expected }) => {
       // Mock fs.readFileSync to return the input version
       fs.readFileSync.mockReturnValue(input);
-      
-      // Mock fs.writeFileSync to capture what gets written
-      const writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync');
-      
-      // Mock process.exit to capture the exit code
-      const exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {});
-      
-      // Mock console.log to avoid noise in test output
-      jest.spyOn(console, 'log').mockImplementation(() => {});
-      jest.spyOn(console, 'error').mockImplementation(() => {});
 
       // Run the production code
       bumpVersion();
@@ -55,9 +60,6 @@ describe('bumpVersion', () => {
 
       // Verify process.exit was called with success code
       expect(exitSpy).toHaveBeenCalledWith(0);
-
-      // Clean up
-      exitSpy.mockRestore();
     });
   });
 
@@ -73,18 +75,6 @@ describe('bumpVersion', () => {
     ])('should fail to bump version %s', (input) => {
       // Mock fs.readFileSync to return the invalid version
       fs.readFileSync.mockReturnValue(input);
-      
-      // Mock fs.writeFileSync to verify it's not called
-      const writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync');
-      
-      // Mock console.error to capture error output
-      const consoleErrorSpy = jest.spyOn(console, 'error');
-      
-      // Mock process.exit to capture the exit code
-      const exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {});
-      
-      // Mock console.log to avoid noise in test output
-      jest.spyOn(console, 'log').mockImplementation(() => {});
 
       // Run the production code
       bumpVersion();
@@ -100,10 +90,6 @@ describe('bumpVersion', () => {
 
       // Verify process.exit was called with error code
       expect(exitSpy).toHaveBeenCalledWith(1);
-
-      // Clean up
-      exitSpy.mockRestore();
-      consoleErrorSpy.mockRestore();
     });
   });
 });
