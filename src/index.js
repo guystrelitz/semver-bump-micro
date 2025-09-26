@@ -6,6 +6,9 @@ const semVerPattern = /^(\d+\.\d+\.)(\d+)$/;
 function bumpVersion() {
   try {
     // Read the target file
+    console.log(`GITHUB_WORKSPACE: ${process.env.GITHUB_WORKSPACE}`);
+    console.log(`INPUT_TARGET_DIRECTORY: ${process.env.INPUT_TARGET_DIRECTORY}`);
+    console.log(`INPUT_TARGET_FILE: ${process.env.INPUT_TARGET_FILE}`);
     const targetFile = path.join(
       process.env.GITHUB_WORKSPACE,
       process.env.INPUT_TARGET_DIRECTORY,
