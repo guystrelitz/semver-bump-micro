@@ -16,7 +16,12 @@ function bumpVersion() {
       process.env.INPUT_TARGET_FILE
     );
     console.log(`Target file: ${targetFile}`);
-    const oldSemVer = fs.readFileSync(targetFile, 'utf8');
+    let oldSemVer;
+    try {
+      oldSemVer = fs.readFileSync(targetFile, 'utf8');
+    } catch (e) {
+      throw new Error(`Failed to read target file: ${e.message}`);
+    }
     console.log(`Target file contents: "${oldSemVer}"`);
 
     // Increment value
