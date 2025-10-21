@@ -20,7 +20,8 @@ function bumpVersion() {
     try {
       oldSemVer = fs.readFileSync(targetFile, 'utf8');
     } catch (e) {
-      throw new Error(`Failed to read target file: ${e.message}`);
+      console.error(e.toString());
+      throw e;
     }
     console.log(`Target file contents: "${oldSemVer}"`);
 
