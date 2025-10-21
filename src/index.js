@@ -29,6 +29,7 @@ function bumpVersion() {
     // Increment value
     const match = oldSemVer.match(semVerPattern);
     if  (match === null) {
+      console.error(`Invalid target file contents`);
       throw new Error(`Invalid target file contents`);
     }
 
