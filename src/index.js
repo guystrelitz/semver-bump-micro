@@ -15,16 +15,8 @@ function bumpVersion() {
       process.env.INPUT_TARGET_FILE
     );
     console.log(`Target file: ${targetFile}`);
-    let oldSemVer;
-    try {
-      oldSemVer = fs.readFileSync(targetFile, 'utf8');
-    } catch (e) {
-      console.log('uh-oh');
-      console.log(e.toString());
-      throw e;
-    }
-    console.log('Successfully read target file');
-    console.log(`Target file contents: "${oldSemVer}"`);
+    const oldSemVer = fs.readFileSync(targetFile, 'utf8');
+    console.log(`Successfully read target file. Contents: "${oldSemVer}"`);
 
     // Increment value
     const match = oldSemVer.match(semVerPattern);
