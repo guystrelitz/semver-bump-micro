@@ -17,11 +17,12 @@ function bumpVersion() {
     );
     console.log(`Target file: ${targetFile}`);
     const oldSemVer = fs.readFileSync(targetFile, 'utf8');
+    console.log(`Target file contents: "${oldSemVer}"`);
 
     // Increment value
     const match = oldSemVer.match(semVerPattern);
     if  (match === null) {
-      throw new Error(`Invalid contents of ${targetFile}: "${oldSemVer}"`);
+      throw new Error(`Invalid target file contents`);
     }
 
     const majorMinor = match[1];
