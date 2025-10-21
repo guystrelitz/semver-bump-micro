@@ -15,6 +15,9 @@ permissions:
 jobs:
   bump-version:
     runs-on: ubuntu-latest
+    env:
+      TARGET_DIR: .
+      TARGET_FILE: version
     steps:
       - name: Checkout code
         uses: actions/checkout@v5
@@ -22,17 +25,17 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
           ref: test-branch
-      
+
       - name: Bump version
         uses: guystrelitz/semver-bump-micro@test-branch
         with:
-          target_directory: .
-          target_file: version
-      
+          target_directory: ${{ env.TARGET_DIR }}
+          target_file: ${{ env.TARGET_FILE }}
+
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
-          git add version
+          git add ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
           git commit --amend --no-edit
           git push --force-with-lease
