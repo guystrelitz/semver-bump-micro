@@ -20,6 +20,7 @@ function bumpVersion() {
     try {
       oldSemVer = fs.readFileSync(targetFile, 'utf8');
     } catch (e) {
+      console.log('uh-oh');
       console.log(e.toString());
       throw e;
     }
