@@ -21,7 +21,7 @@ function bumpVersion() {
     // Increment value
     const match = oldSemVer.match(semVerPattern);
     if  (match === null) {
-      throw new Error(`${targetFile} does not record a valid semantic version.`);
+      throw new Error(`Invalid contents of ${targetFile}: "${oldSemVer}"`);
     }
 
     const majorMinor = match[1];
