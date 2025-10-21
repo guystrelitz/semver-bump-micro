@@ -26,8 +26,8 @@ jobs:
       - name: Bump version
         uses: guystrelitz/semver-bump-micro@devel
         with:
-          target_directory: config
-          target_file: VERSION
+          target_directory: .
+          target_file: version
       
       - name: Commit and push
         run: |
