@@ -20,9 +20,10 @@ function bumpVersion() {
     try {
       oldSemVer = fs.readFileSync(targetFile, 'utf8');
     } catch (e) {
-      console.error(e.toString());
+      console.log(e.toString());
       throw e;
     }
+    console.log('Successfully read target file');
     console.log(`Target file contents: "${oldSemVer}"`);
 
     // Increment value
