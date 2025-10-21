@@ -24,7 +24,7 @@ jobs:
           ref: test-branch
       
       - name: Bump version
-        uses: guystrelitz/semver-bump-micro@devel
+        uses: guystrelitz/semver-bump-micro@test-branch
         with:
           target_directory: .
           target_file: version
