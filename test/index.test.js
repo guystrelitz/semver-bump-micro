@@ -6,7 +6,7 @@ const bumpVersion = require('../src/index.js');
 jest.mock('fs');
 
 describe('bumpVersion', () => {
-  let writeFileSyncSpy, exitSpy, consoleErrorSpy;
+  let writeFileSyncSpy, exitSpy, consoleLogSpy;
 
   beforeEach(() => {
     // Reset all mocks before each test
@@ -20,11 +20,7 @@ describe('bumpVersion', () => {
     // Set up spies that are the same for all tests
     writeFileSyncSpy = jest.spyOn(fs, 'writeFileSync');
     exitSpy = jest.spyOn(process, 'exit').mockImplementation(() => {});
-    consoleErrorSpy = jest.spyOn(console, 'error');
-
-    // Mock console methods to avoid noise in test output
-    jest.spyOn(console, 'log').mockImplementation(() => {});
-    jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
   });
 
   afterEach(() => {
@@ -35,7 +31,7 @@ describe('bumpVersion', () => {
 
     // Clean up spies
     exitSpy.mockRestore();
-    consoleErrorSpy.mockRestore();
+    consoleLogSpy.mockRestore();
   });
 
   describe('happy path: valid version formats', () => {
@@ -63,33 +59,48 @@ describe('bumpVersion', () => {
     });
   });
 
-  describe('exception path: invalid version formats', () => {
-    test.each([
-      '1.2',           // Missing patch
-      '1.2.3.4',       // Too many parts
-      'v1.2.3',        // Has prefix
-      '1.2.3-beta',    // Has suffix
-      '1.2.3\n',       // Has newline
-      ' 1.2.3 ',       // Has whitespace
-      '1.2.3\nother',  // Has additional content
-    ])('should fail to bump version %s', (input) => {
-      // Mock fs.readFileSync to return the invalid version
-      fs.readFileSync.mockReturnValue(input);
+  describe('exception path', () => {
+
+    describe('invalid version formats do not alter the version file', () => {
+      test.each([
+        '1.2',           // Missing patch
+        '1.2.3.4',       // Too many parts
+        'v1.2.3',        // Has prefix
+        '1.2.3-beta',    // Has suffix
+        '1.2.3\n',       // Has newline
+        ' 1.2.3 ',       // Has whitespace
+        '1.2.3\nother',  // Has additional content
+      ])('should fail to bump version %s', (input) => {
+        // Mock fs.readFileSync to return the invalid version
+        fs.readFileSync.mockReturnValue(input);
+
+        // Run the production code
+        bumpVersion();
+
+        // Verify fs.writeFileSync was NOT called
+        expect(writeFileSyncSpy).not.toHaveBeenCalled();
+
+        // Verify process.exit was called with error code
+        expect(exitSpy).toHaveBeenCalledWith(1);
+      });
+    });  // describe 'invalid version formats'
+
+    test('console output', () => {
+      // Mock fs.readFileSync to return invalid content
+      fs.readFileSync.mockReturnValue('hello');
 
       // Run the production code
       bumpVersion();
 
-      // Verify fs.writeFileSync was NOT called
-      expect(writeFileSyncSpy).not.toHaveBeenCalled();
-
-      // Verify console.error was called with error message
-      expect(consoleErrorSpy).toHaveBeenCalledWith(
+      // Verify appropriate logging
+      expect(consoleLogSpy).toHaveBeenCalledWith('Target file contents: "hello"');
+      expect(consoleLogSpy).toHaveBeenCalledWith(
         'Failed to increment the semantic version:',
-        expect.stringContaining('does not record a valid semantic version')
-      );
+        'Invalid target file contents');
 
-      // Verify process.exit was called with error code
-      expect(exitSpy).toHaveBeenCalledWith(1);
-    });
-  });
+      // do not expect a bare invalid consolemessage – it's included in the call above
+      expect(consoleLogSpy).not.toHaveBeenCalledWith('Invalid target file contents');
+    });  // describe 'console output'
+
+  });  // describe 'exception path'
 });

@@ -16,12 +16,14 @@ function bumpVersion() {
     );
     console.log(`Target file: ${targetFile}`);
     const oldSemVer = fs.readFileSync(targetFile, 'utf8');
+    console.log(`Target file contents: "${oldSemVer}"`);
 
     // Increment value
     const match = oldSemVer.match(semVerPattern);
     if  (match === null) {
-      throw new Error(`${targetFile} does not record a valid semantic version.`);
+      throw new Error('Invalid target file contents');
     }
+    console.log('Matched target file version');
 
     const majorMinor = match[1];
     const oldMicro = match[2];
@@ -33,7 +35,7 @@ function bumpVersion() {
     console.log(`Incremented the semantic version from ${oldSemVer} to ${newSemVer}.`);
     process.exit(0);
   } catch (e) {
-    console.error('Failed to increment the semantic version:', e.message);
+    console.log('Failed to increment the semantic version:', e.message);
     process.exit(1);
   }
 }

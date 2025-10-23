@@ -2,10 +2,10 @@ name: Semantic Version Bump
 description: Increments the micro portion of a semver version number in a file.
 
 inputs:
-  target-directory:
+  target_directory:
     description: Directory containing the version file
     required: true
-  target-file:
+  target_file:
     description: Name of the version file (must contain only a semver number, with no additional text, comments, or whitespace)
     required: true
 

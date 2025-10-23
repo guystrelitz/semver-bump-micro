@@ -1,0 +1,41 @@
+name: Bump Version
+on:
+  push:
+    branches: [main]
+    paths-ignore: ['version']
+  workflow_dispatch: # allow manual triggering
+
+concurrency:
+  group: version-bump-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: write  # Allow pushing commits
+
+jobs:
+  bump-version:
+    runs-on: ubuntu-latest
+    env:
+      TARGET_DIR: .
+      TARGET_FILE: version
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+          ref: main
+
+      - name: Bump version
+        uses: guystrelitz/semver-bump-micro@main
+        with:
+          target_directory: ${{ env.TARGET_DIR }}
+          target_file: ${{ env.TARGET_FILE }}
+
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
+          git commit --amend --no-edit
+          git push --force-with-lease
