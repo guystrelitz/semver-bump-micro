@@ -1,7 +1,12 @@
 const fs = require('fs');
 const path = require('path');
 
-const semVerPattern = /^(\d+\.\d+\.)(\d+)$/;
+// Match a semver number with an optional trailing line ending (LF or CR-LF)
+// we're capturing:
+// - (major.minor.): (\d+\.\d+\.)
+// - (micro): (\d+)
+// optional trailing line ending is non-capturing: (?:\r?\n)?
+const semVerPattern = /^(\d+\.\d+\.)(\d+)(?:\r?\n)?$/;
 
 function bumpVersion() {
   try {

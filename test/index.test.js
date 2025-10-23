@@ -34,30 +34,56 @@ describe('bumpVersion', () => {
     consoleLogSpy.mockRestore();
   });
 
-  describe('happy path: valid version formats', () => {
-    test.each([
-      { input: '1.2.3', expected: '1.2.4' },
-      { input: '0.0.0', expected: '0.0.1' },
-      { input: '10.20.30', expected: '10.20.31' },
-      { input: '1.0.9', expected: '1.0.10' },
-    ])('should bump version from $input to $expected', ({ input, expected }) => {
-      // Mock fs.readFileSync to return the input version
-      fs.readFileSync.mockReturnValue(input);
+  describe('happy path', () => {
+    describe('valid version formats', () => {
+      test.each([
+        { input: '1.2.3', expected: '1.2.4' },
+        { input: '0.0.0', expected: '0.0.1' },
+        { input: '10.20.30', expected: '10.20.31' },
+        { input: '1.0.9', expected: '1.0.10' },
+      ])('should bump version from $input to $expected', ({ input, expected }) => {
+        // Mock fs.readFileSync to return the input version
+        fs.readFileSync.mockReturnValue(input);
 
-      // Run the production code
-      bumpVersion();
+        // Run the production code
+        bumpVersion();
 
-      // Verify fs.writeFileSync was called with correct path and new version
-      expect(writeFileSyncSpy).toHaveBeenCalledWith(
-        path.join('/fake/workspace', '.', 'semver'),
-        expected,
-        'utf8'
-      );
+        // Verify fs.writeFileSync was called with correct path and new version
+        expect(writeFileSyncSpy).toHaveBeenCalledWith(
+          path.join('/fake/workspace', '.', 'semver'),
+          expected,
+          'utf8'
+        );
 
-      // Verify process.exit was called with success code
-      expect(exitSpy).toHaveBeenCalledWith(0);
-    });
-  });
+        // Verify process.exit was called with success code
+        expect(exitSpy).toHaveBeenCalledWith(0);
+      });
+    });  // describe 'valid version formats'
+
+    describe('is tolerant to trailing line ending', () => {
+      test.each([
+        {input: '1.2.3\n', description: 'LF'},
+        {input: '1.2.3\r\n', description: 'CR-LF'},
+      ])('should strip trailing $description', ({input, description}) => {
+        // Mock fs.readFileSync to return the input version
+        fs.readFileSync.mockReturnValue(input);
+
+        // Run the production code
+        bumpVersion();
+
+        // new version is persisted WITHOUT the trailing newline
+        expect(writeFileSyncSpy).toHaveBeenCalledWith(
+          path.join('/fake/workspace', '.', 'semver'),
+          '1.2.4',
+          'utf8'
+        );
+
+        // Verify process.exit was called with success code
+        expect(exitSpy).toHaveBeenCalledWith(0);
+      });
+    });  // describe 'is tolerant to trailing newline'
+
+  });  // describe('happy path'
 
   describe('exception path', () => {
 
@@ -67,7 +93,6 @@ describe('bumpVersion', () => {
         '1.2.3.4',       // Too many parts
         'v1.2.3',        // Has prefix
         '1.2.3-beta',    // Has suffix
-        '1.2.3\n',       // Has newline
         ' 1.2.3 ',       // Has whitespace
         '1.2.3\nother',  // Has additional content
       ])('should fail to bump version %s', (input) => {
