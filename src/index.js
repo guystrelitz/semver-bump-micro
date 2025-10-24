@@ -33,9 +33,7 @@ function bumpVersion() {
     let [major, minor, micro] = match.slice(1);
 
     if (process.env.INPUT_BUMP_TYPE === 'bump_major') {
-      major = Number(major) + 1;
-      minor = 0;
-      micro = 0;
+      [major, minor, micro] = [(Number(major) + 1), 0, 0];
     } else {
       micro = Number(micro) + 1;
     }
