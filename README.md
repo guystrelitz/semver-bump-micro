@@ -18,14 +18,14 @@ When the minor version is incremented, the micro resets to 0. When the major is 
 It gives an indication of how far apart two versions are, eg when considering compatibility or an upgrade.
 
 ## Overview of `semver-bump-micro`
-This action maintains a semantic version in Github by incrementing the micro version on each push to `main` (actually to any branch you choose).
+This action maintains a semantic version in GitHub by incrementing the micro version on each push to `main` (actually to any branch you choose).
 
 It is inspired by the work of - [PaulHatch/semantic-version](https://github.com/PaulHatch/semantic-version) and [yoichiro/gh-action-increment-value](https://github.com/yoichiro/gh-action-increment-value). However those two don't quite meet my needs. I want a semantic version rather than a simple counter, but I don't want to put content in my commit messages to manage it.
 
 `semver-bump-micro` increments only the micro version. I've taken the view that this is the one that needs frequent automatic updating. Minor and major versions can be managed manually and intentionally.
 
 The semantic version is maintained in a version file that:
-- contains **only** a valid semantic vesion number
+- contains **only** a valid semantic version number
 - can be named anything and kept anywhere in your repository
 
 This action reads the semantic version number, increments the micro version and writes it back to the file.
@@ -74,7 +74,7 @@ jobs:
           # this fetches the full version history
           # otherwise the `git commit --amend --no-edit` step below risks flattening your repository history
           fetch-depth: 0
-          # belt-and-braces safety
+          # the branch to check out
           ref: main
       
       - name: Bump version
@@ -94,18 +94,26 @@ jobs:
           git push --force-with-lease
 ```
 
-### Configuration
+### Workflow configuration guide
 In the workflow file the following settings are required:
 
-| Setting        | Description                           |
-|----------------|---------------------------------------|
-| `TARGET_FILE`  | Name of the version file              |
-| `TARGET_DIR`   | Directory containing the version file |
-| `paths-ignore` | Concatenation of `TARGET_DIR/TARGET_FILE`<br>Due to workflow file syntax this has to be set separately|
+| Setting             | Description                           |
+|---------------------|---------------------------------------|
+| `TARGET_FILE`       | Name of the version file              |
+| `TARGET_DIR`        | Directory containing the version file |
+| `paths-ignore`      | Concatenation of `TARGET_DIR/TARGET_FILE`<br>Due to workflow file syntax this has to be set separately|
+| `branches`<br>
+  `ref`               | The branch on which pushes will cause the workflow to run<br>
+                        The branch to check out and commit<br>
+                        Obviously these should be the same!   |
+| `workflow_dispatch` | You can omit this line if you don't want to a 'Run workflow' button in GitHub. |
+
+**⚠️ Do not remove `fetch-depth: 0`**. If you do so and retain `git commit --amend --no-edit`, the action is liable to flatten your entire history in GitHub. The next `git pull` will then flatten it on your development machine. Your history may well become unrecoverable.
 
 ### Version File Format
+The version file must contain **exactly** a semantic version number with no additional content.
 
-The version file must contain **exactly** a semantic version number with no additional content. A trailing end-of-line is permitted (LF or CR-LF) but will be lost when the action runs.
+The action is tolerant of a trailing line ending (both Unix \n and Windows \r\n), and will strip it when writing the new version.
 
 #### ✅ Valid formats:
 - `1.2.3`
@@ -113,56 +121,34 @@ The version file must contain **exactly** a semantic version number with no addi
 - `10.20.30`
 
 #### ❌ Invalid formats:
-- `1.2          # missing patch version`
-- `1.2.3.4      # too many parts`
-- `v1.2.3       # has prefix`
-- `1.2.3-beta   # has suffix`
-- ` 1.2.3       # has whitespace`
-- `1.2.3`
-  `other text   # has additional content`
-
-The action is tolerant of trailing line endings (both Unix `\n` and Windows `\r\n`) and will strip them when writing the new version.
-
-## Design Philosophy
-
-*[This section is reserved for the project maintainer to describe the design principles and goals of this action.]*
+- `1.2           # missing patch version`
+- `1.2.3.4       # too many parts`
+- `v1.2.3        # has prefix`
+- `1.2.3-beta    # has suffix`
+- `  1.2.3       # has whitespace`
+- `1.2.3         # has additional content`<br>`other text`
 
 ## Limitations
-
 - **Manual edits break automation**: If users manually edit the version file, it will cause conflicts with the automated version bumping
 - **Single version file only**: This action only handles one version file per workflow run
-- **Patch version only**: Only increments the micro/patch version (e.g., 1.2.3 → 1.2.4)
-- **No semantic analysis**: Does not analyze commit messages to determine version bump type (major/minor/patch)
-- **Git history dependency**: Requires full Git history (`fetch-depth: 0`) for proper operation
+- **`git pull`:** Even in solo development you will have to run `git pull` before each `git push origin`, because the version file and commit hash will have changed on origin in GitHub
 
 ## Development
-
 ### Running Tests
-
 ```bash
 npm test
 ```
 
 ### Test Coverage
-
-The action includes comprehensive tests covering:
+The action includes tests covering:
 - Valid version formats
 - Invalid version formats  
 - Line ending tolerance
 - Console output behavior
 - Error handling
 
-## Acknowledgments
-
-This action was inspired by and builds upon the excellent work of:
-
-- [PaulHatch/semantic-version](https://github.com/PaulHatch/semantic-version) - For demonstrating semantic versioning automation patterns
-- [yoichiro/gh-action-increment-value](https://github.com/yoichiro/gh-action-increment-value) - For showing simple value increment approaches
-
 ## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
+MIT License. See [LICENSE](LICENSE) file for details.
 
 ## Contributing
-
-Contributions are welcome! Please feel free to submit issues and pull requests.
+Contributions are welcome! Please feel free to submit issues and pull requests. If submitting a pull request, please be sure to include tests for all new behaviour.
