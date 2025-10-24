@@ -6,7 +6,7 @@ const path = require('path');
 // - (major.minor.): (\d+\.\d+\.)
 // - (micro): (\d+)
 // optional trailing line ending is non-capturing: (?:\r?\n)?
-const semVerPattern = /^(\d+\.\d+\.)(\d+)(?:\r?\n)?$/;
+const semVerPattern = /^(\d+)\.(\d+)\.(\d+)(?:\r?\n)?$/;
 
 function bumpVersion() {
   try {
@@ -30,10 +30,18 @@ function bumpVersion() {
     }
     console.log('Matched target file version');
 
-    const majorMinor = match[1];
-    const oldMicro = match[2];
-    const newMicro = Number(oldMicro) + 1;
-    const newSemVer = majorMinor + newMicro;
+    let major = match[1];
+    let minor = match[2];
+    let micro = match[3];
+
+    if (process.env.INPUT_BUMP_TYPE === 'bump_major') {
+      major = Number(major) + 1;
+      minor = 0;
+      micro = 0;
+    } else {
+      micro = Number(micro) + 1;
+    }
+    const newSemVer = `${major}.${minor}.${micro}`;
 
     // Write the target file
     fs.writeFileSync(targetFile, newSemVer, 'utf8');
