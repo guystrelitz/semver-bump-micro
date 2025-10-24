@@ -40,15 +40,13 @@ function bumpVersion() {
     }
     console.log('Matched target file version');
 
-    let [major, minor, micro] = match.slice(1);
+    let [major, minor, micro] = match.slice(1).map(Number);
 
-    if (INPUT_BUMP_TYPE === 'bump_major') {
-      [major, minor, micro] = [(Number(major) + 1), 0, 0];
-    } else if (process.env.INPUT_BUMP_TYPE === 'bump_minor') {
-      [minor, micro] = [(Number(minor) + 1), 0];
-    } else {
-      micro = Number(micro) + 1;
-    }
+    [major, minor, micro] =
+      INPUT_BUMP_TYPE === 'bump_major' ? [++major, 0, 0] :
+      INPUT_BUMP_TYPE === 'bump_minor' ? [major, ++minor, 0] :
+      [major, minor, ++micro];
+
     const newSemVer = `${major}.${minor}.${micro}`;
 
     // Write the target file
