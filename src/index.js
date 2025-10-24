@@ -10,15 +10,18 @@ const semVerPattern = /^(\d+)\.(\d+)\.(\d+)(?:\r?\n)?$/;
 
 function bumpVersion() {
   try {
-    // Read the target file
-    console.log(`GITHUB_WORKSPACE: ${process.env.GITHUB_WORKSPACE}`);
-    console.log(`INPUT_TARGET_DIRECTORY: ${process.env.INPUT_TARGET_DIRECTORY}`);
-    console.log(`INPUT_TARGET_FILE: ${process.env.INPUT_TARGET_FILE}`);
+    const { GITHUB_WORKSPACE, INPUT_TARGET_DIRECTORY, INPUT_TARGET_FILE } = process.env;
+    console.log(`GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}`);
+    console.log(`INPUT_TARGET_DIRECTORY: ${INPUT_TARGET_DIRECTORY}`);
+    console.log(`INPUT_TARGET_FILE: ${INPUT_TARGET_FILE}`);
+
     const targetFile = path.join(
-      process.env.GITHUB_WORKSPACE,
-      process.env.INPUT_TARGET_DIRECTORY,
-      process.env.INPUT_TARGET_FILE
+      GITHUB_WORKSPACE,
+      INPUT_TARGET_DIRECTORY,
+      INPUT_TARGET_FILE
     );
+
+    // Read the target file
     console.log(`Target file: ${targetFile}`);
     const oldSemVer = fs.readFileSync(targetFile, 'utf8');
     console.log(`Target file contents: "${oldSemVer}"`);
