@@ -10,10 +10,17 @@ const semVerPattern = /^(\d+)\.(\d+)\.(\d+)(?:\r?\n)?$/;
 
 function bumpVersion() {
   try {
-    const { GITHUB_WORKSPACE, INPUT_TARGET_DIRECTORY, INPUT_TARGET_FILE } = process.env;
+    const {
+      GITHUB_WORKSPACE,
+      INPUT_TARGET_DIRECTORY,
+      INPUT_TARGET_FILE,
+      INPUT_BUMP_TYPE
+    } = process.env;
+
     console.log(`GITHUB_WORKSPACE: ${GITHUB_WORKSPACE}`);
     console.log(`INPUT_TARGET_DIRECTORY: ${INPUT_TARGET_DIRECTORY}`);
     console.log(`INPUT_TARGET_FILE: ${INPUT_TARGET_FILE}`);
+    console.log(`INPUT_BUMP_TYPE: ${INPUT_BUMP_TYPE}`);
 
     const targetFile = path.join(
       GITHUB_WORKSPACE,
@@ -35,7 +42,7 @@ function bumpVersion() {
 
     let [major, minor, micro] = match.slice(1);
 
-    if (process.env.INPUT_BUMP_TYPE === 'bump_major') {
+    if (INPUT_BUMP_TYPE === 'bump_major') {
       [major, minor, micro] = [(Number(major) + 1), 0, 0];
     } else if (process.env.INPUT_BUMP_TYPE === 'bump_minor') {
       [minor, micro] = [(Number(minor) + 1), 0];
