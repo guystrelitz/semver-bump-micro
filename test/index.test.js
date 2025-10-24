@@ -36,7 +36,7 @@ describe('bumpVersion', () => {
   });
 
   describe('happy path', () => {
-    describe('valid version formats', () => {
+    describe('minor bump of valid version formats', () => {
       test.each([
         { input: '1.2.3', expected: '1.2.4' },
         { input: '0.0.0', expected: '0.0.1' },
@@ -85,6 +85,27 @@ describe('bumpVersion', () => {
     });  // describe 'is tolerant to trailing newline'
 
   });  // describe('happy path'
+
+  describe('bump major and minor versions', () => {
+    test('bump major version', () => {
+      // Mock fs.readFileSync to return the initial version
+      fs.readFileSync.mockReturnValue('1.2.3');
+
+      // Run the production code with bump_type input
+      process.env.INPUT_BUMP_TYPE = 'bump_major';
+      bumpVersion();
+
+      // Verify fs.writeFileSync was called with correct path and new version
+      expect(writeFileSyncSpy).toHaveBeenCalledWith(
+        path.join('/fake/workspace', '.', 'semver'),
+        '2.0.0',
+        'utf8'
+      );
+
+      // Verify process.exit was called with success code
+      expect(exitSpy).toHaveBeenCalledWith(0);
+    });
+  });  // describe 'bump major and minor versions'
 
   describe('exception path', () => {
 
