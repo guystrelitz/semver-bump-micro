@@ -30,9 +30,7 @@ function bumpVersion() {
     }
     console.log('Matched target file version');
 
-    let major = match[1];
-    let minor = match[2];
-    let micro = match[3];
+    let [major, minor, micro] = match.slice(1);
 
     if (process.env.INPUT_BUMP_TYPE === 'bump_major') {
       major = Number(major) + 1;
