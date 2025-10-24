@@ -23,6 +23,15 @@ describe('bumpVersion', () => {
     consoleLogSpy = jest.spyOn(console, 'log').mockImplementation(() => {});
   });
 
+  // Helper function to verify writeFileSync was called with expected version
+  const expectWriteVersionFileWith = (expectedVersion) => {
+    expect(writeFileSyncSpy).toHaveBeenCalledWith(
+      path.join('/fake/workspace', '.', 'semver'),
+      expectedVersion,
+      'utf8'
+    );
+  };
+
   afterEach(() => {
     // Clean up environment variables
     delete process.env.GITHUB_WORKSPACE;
@@ -50,11 +59,7 @@ describe('bumpVersion', () => {
         bumpVersion();
 
         // Verify fs.writeFileSync was called with correct path and new version
-        expect(writeFileSyncSpy).toHaveBeenCalledWith(
-          path.join('/fake/workspace', '.', 'semver'),
-          expected,
-          'utf8'
-        );
+        expectWriteVersionFileWith(expected);
 
         // Verify process.exit was called with success code
         expect(exitSpy).toHaveBeenCalledWith(0);
@@ -73,11 +78,7 @@ describe('bumpVersion', () => {
         bumpVersion();
 
         // new version is persisted WITHOUT the trailing newline
-        expect(writeFileSyncSpy).toHaveBeenCalledWith(
-          path.join('/fake/workspace', '.', 'semver'),
-          '1.2.4',
-          'utf8'
-        );
+        expectWriteVersionFileWith('1.2.4');
 
         // Verify process.exit was called with success code
         expect(exitSpy).toHaveBeenCalledWith(0);
@@ -95,15 +96,7 @@ describe('bumpVersion', () => {
       process.env.INPUT_BUMP_TYPE = 'bump_major';
       bumpVersion();
 
-      // Verify fs.writeFileSync was called with correct path and new version
-      expect(writeFileSyncSpy).toHaveBeenCalledWith(
-        path.join('/fake/workspace', '.', 'semver'),
-        '2.0.0',
-        'utf8'
-      );
-
-      // Verify process.exit was called with success code
-      expect(exitSpy).toHaveBeenCalledWith(0);
+      expectWriteVersionFileWith('2.0.0');
     });
   });  // describe 'bump major and minor versions'
 
