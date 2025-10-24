@@ -101,9 +101,10 @@ In the workflow file the following settings are required:
 |---------------------|---------------------------------------|
 | `TARGET_FILE`       | Name of the version file              |
 | `TARGET_DIR`        | Directory containing the version file |
-| `paths-ignore`      | Concatenation of `TARGET_DIR/TARGET_FILE`<br>Due to workflow file syntax this has to be set separately|
-| `branches`<br>`ref` | The branch on which pushes will cause the workflow to run<br>The branch to check out and commit<br>Obviously these should be the same! |
-| `workflow_dispatch` | You can omit this line if you don't want to a 'Run workflow' button in GitHub. |
+| `paths-ignore`      | Concatenation of `TARGET_DIR/TARGET_FILE`<br>Due to workflow file syntax this has to be set separately |
+| `branches`          | The branch on which pushes will cause the workflow to run |
+| `ref`               | The branch to check out and commit. Obviously this should be the same as `branches`! |
+| `workflow_dispatch` | You can omit this line if you don't want to a 'Run workflow' button in GitHub.     |
 
 **⚠️ Do not remove `fetch-depth: 0`**. If you do so and retain `git commit --amend --no-edit`, the action is liable to flatten your entire history in GitHub. The next `git pull` will then flatten it on your development machine. Your history may well become unrecoverable.
 
