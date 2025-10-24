@@ -96,7 +96,18 @@ describe('bumpVersion', () => {
       bumpVersion();
 
       expectWriteVersionFileWith('2.0.0');
-    });
+    });  // test 'bump major version'
+
+    test('bump minor version', () => {
+      // Mock fs.readFileSync to return the initial version
+      fs.readFileSync.mockReturnValue('1.2.3');
+
+      // Run the production code with bump_type input
+      process.env.INPUT_BUMP_TYPE = 'bump_minor';
+      bumpVersion();
+
+      expectWriteVersionFileWith('1.3.0');
+    });  // test 'bump minor version'
   });  // describe 'bump major and minor versions'
 
   describe('exception path', () => {

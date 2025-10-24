@@ -37,6 +37,8 @@ function bumpVersion() {
 
     if (process.env.INPUT_BUMP_TYPE === 'bump_major') {
       [major, minor, micro] = [(Number(major) + 1), 0, 0];
+    } else if (process.env.INPUT_BUMP_TYPE === 'bump_minor') {
+      [minor, micro] = [(Number(minor) + 1), 0];
     } else {
       micro = Number(micro) + 1;
     }
