@@ -24,6 +24,10 @@ It is inspired by the work of - [PaulHatch/semantic-version](https://github.com/
 
 `semver-bump-micro` increments only the micro version. I've taken the view that this is the one that needs frequent automatic updating. Minor and major versions can be managed manually and intentionally.
 
+It's designed to increment on pushes to main, not to count every commit. Incrementing on push strikes a good balance between automation and simplicity, while:
+1. reliably providing a simple, always-increasing version number for every available code version;
+2. indicating how far apart two versions are.
+
 The semantic version is maintained in a version file that:
 - contains **only** a valid semantic version number
 - can be named anything and kept anywhere in your repository
@@ -33,7 +37,6 @@ This action reads the semantic version number, increments the micro version and 
 The supplied workflow (below) checks out your codebase, calls the action and commits the change. It is triggered on push to `main` (or any branch or branches you choose).
 
 ## Usage
-
 ### Basic Workflow
 Place this workflow in your `.github/workflows` directory.
 eg `.github/workflows/bump-version.yml`.
@@ -104,7 +107,7 @@ In the workflow file the following settings are required:
 | `paths-ignore`      | Concatenation of `TARGET_DIR/TARGET_FILE`<br>Due to workflow file syntax this has to be set separately |
 | `branches`          | The branch on which pushes will cause the workflow to run |
 | `ref`               | The branch to check out and commit. Obviously this should be the same as `branches`! |
-| `workflow_dispatch` | You can omit this line if you don't want to a 'Run workflow' button in GitHub.     |
+| `workflow_dispatch` | You can omit this line if you don't want a 'Run workflow' button in GitHub.     |
 
 **⚠️ Do not remove `fetch-depth: 0`**. If you do so and retain `git commit --amend --no-edit`, the action is liable to flatten your entire history in GitHub. The next `git pull` will then flatten it on your development machine. Your history may well become unrecoverable.
 
@@ -130,6 +133,7 @@ The action is tolerant of a trailing line ending (both Unix \n and Windows \r\n)
 - **Manual edits break automation**: If users manually edit the version file, it will cause conflicts with the automated version bumping
 - **Single version file only**: This action only handles one version file per workflow run
 - **`git pull`:** Even in solo development you will have to run `git pull` before each `git push origin`, because the version file and commit hash will have changed on origin in GitHub
+- **Increments on push to `main`, not for each commit**: The action focuses on push events rather than individual commits, which provides a useful level of versioning granularity.
 
 ## Development
 ### Running Tests
