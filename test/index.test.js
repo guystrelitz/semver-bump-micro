@@ -29,9 +29,10 @@ describe('bumpVersion', () => {
     delete process.env.INPUT_TARGET_DIRECTORY;
     delete process.env.INPUT_TARGET_FILE;
 
-    // Clean up spies
+    // Clean up spies and mock
     exitSpy.mockRestore();
     consoleLogSpy.mockRestore();
+    fs.readFileSync.mockReset();
   });
 
   describe('happy path', () => {
@@ -110,7 +111,7 @@ describe('bumpVersion', () => {
       });
     });  // describe 'invalid version formats'
 
-    test('console output', () => {
+    test('console output for invalid version format', () => {
       // Mock fs.readFileSync to return invalid content
       fs.readFileSync.mockReturnValue('hello');
 
@@ -126,6 +127,22 @@ describe('bumpVersion', () => {
       // do not expect a bare invalid consolemessage – it's included in the call above
       expect(consoleLogSpy).not.toHaveBeenCalledWith('Invalid target file contents');
     });  // describe 'console output'
+
+    test('input file does not exist', () => {
+      // Set up environment to point to a nonexistent file
+      process.env.INPUT_TARGET_DIRECTORY = '.';
+      process.env.INPUT_TARGET_FILE = 'nonexistent-semver';
+
+      bumpVersion();
+
+      expect(exitSpy).toHaveBeenCalledWith(1);
+
+      // the file read is undefined
+      // leading to an exception when we try to match it to the version pattern
+      expect(consoleLogSpy).toHaveBeenCalledWith(
+        'Failed to increment the semantic version:',
+        "Cannot read properties of undefined (reading 'match')");
+    });
 
   });  // describe 'exception path'
 });
