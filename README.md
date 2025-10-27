@@ -3,6 +3,23 @@ A GitHub Action that automatically increments the micro (patch) version of a sem
 
 The name is no longer quite accurate – it can also be used to bump the minor and major versions (see [WORKFLOWS](WORKFLOWS.md)).
 
+## Contents
+- [About semantic versioning](#about-semantic-versioning)
+- [Overview of `semver-bump-micro`](#overview-of-semver-bump-micro)
+- [Usage](#usage)
+  - [Basic workflow](#basic-workflow)
+  - [Workflow configuration guide](#workflow-configuration-guide)
+  - [Advanced usage – bumping minor and major versions](#advanced-usage--bumping-minor-and-major-versions)
+- [Version file format](#version-file-format)
+  - [Valid formats](#valid-formats)
+  - [Invalid formats](#invalid-formats)
+- [Limitations](#limitations)
+- [Development](#development)
+  - [Running tests](#running-tests)
+  - [Test coverage](#test-coverage)
+- [License](#license)
+- [Contributing](#contributing)
+
 ## About semantic versioning
 Semantic versioning is a three-number version numbering scheme. eg the version:
 
