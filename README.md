@@ -81,7 +81,7 @@ jobs:
           ref: main
       
       - name: Bump version
-        uses: guystrelitz/semver-bump-micro@v1.0.0
+        uses: guystrelitz/semver-bump-micro@v1.1.0
         with:
           target_directory: ${{ env.TARGET_DIR }}
           target_file: ${{ env.TARGET_FILE }}
