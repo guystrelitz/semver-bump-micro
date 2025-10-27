@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "❌ Major version bump cancelled. User did not confirm appropriate major change."
           exit 1
-  
+
   bump-major:
     runs-on: ubuntu-latest
     if: inputs.confirm_major
@@ -36,14 +36,14 @@ jobs:
             ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
           sparse-checkout-cone-mode: false
           fetch-depth: 1
-      
+
       - name: Bump major version
         uses: guystrelitz/semver-bump-micro@v1.0.0
         with:
           target_directory: ${{ env.TARGET_DIR }}
           target_file: ${{ env.TARGET_FILE }}
           bump_type: bump_major
-      
+
       - name: Commit and push
         run: |
           git config --local user.email "action@github.com"
