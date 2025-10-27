@@ -8,6 +8,13 @@ inputs:
   target_file:
     description: Name of the version file (must contain only a semver number, with no additional text, comments, or whitespace)
     required: true
+  bump_type:
+    description: Type of version bump to perform. If omitted, the micro version will be incremented.
+    required: false
+    default: Default action is to increment the micro version. No need to specify bump_micro.
+    options:
+      - bump_minor
+      - bump_major
 
 # No outputs needed - action returns success/failure via exit code
 
