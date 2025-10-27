@@ -38,7 +38,7 @@ jobs:
           fetch-depth: 1
 
       - name: Bump major version
-        uses: guystrelitz/semver-bump-micro@v1.0.0
+        uses: guystrelitz/semver-bump-micro@v1
         with:
           target_directory: ${{ env.TARGET_DIR }}
           target_file: ${{ env.TARGET_FILE }}
