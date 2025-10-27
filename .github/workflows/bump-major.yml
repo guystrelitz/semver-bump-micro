@@ -16,7 +16,7 @@ permissions:
   contents: write
 
 jobs:
-  check-confirmation:
+  cancel-unconfirmed-major-bump:
     runs-on: ubuntu-latest
     if: inputs.confirm_major == false
     steps:
