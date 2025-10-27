@@ -20,8 +20,8 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v5
         with:
-          # sparse-checkout: |
-          #   ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
+          sparse-checkout: |
+            ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
           # sparse-checkout-cone-mode: false
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
