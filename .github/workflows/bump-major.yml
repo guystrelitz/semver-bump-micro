@@ -1,0 +1,54 @@
+name: Bump Major Version
+on:
+  workflow_dispatch:
+    inputs:
+      commit_message:
+        description: 'Commit message'
+        required: true
+        type: string
+      confirm_major:
+        description: '**Major version should only be incremented for breaking changes or major marketing releases.** Please confirm that this is the case.'
+        required: false
+        type: boolean
+        default: false
+
+jobs:
+  check-confirmation:
+    runs-on: ubuntu-latest
+    if: inputs.confirm_major == false
+    steps:
+      - name: Confirmation required
+        run: |
+          echo "❌ Major version bump cancelled. User did not confirm appropriate major change."
+          exit 1
+  
+  bump-major:
+    runs-on: ubuntu-latest
+    if: inputs.confirm_major
+    env:
+      TARGET_DIR: .
+      TARGET_FILE: version
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          sparse-checkout: |
+            ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
+          sparse-checkout-cone-mode: false
+          fetch-depth: 1
+      
+      - name: Bump major version
+        uses: guystrelitz/semver-bump-micro@v1.0.0
+        with:
+          target_directory: ${{ env.TARGET_DIR }}
+          target_file: ${{ env.TARGET_FILE }}
+          bump_type: bump_major
+      
+      - name: Commit and push
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
+          git commit -m "${{ inputs.commit_message }}"
+          git push
+

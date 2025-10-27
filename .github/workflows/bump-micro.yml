@@ -1,4 +1,4 @@
-name: Bump Version
+name: Bump Micro Version
 on:
   push:
     branches: [main]
