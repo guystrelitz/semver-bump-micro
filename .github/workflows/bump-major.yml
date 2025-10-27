@@ -12,6 +12,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: write
+
 jobs:
   check-confirmation:
     runs-on: ubuntu-latest
@@ -34,7 +37,7 @@ jobs:
         with:
           sparse-checkout: |
             ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
-          sparse-checkout-cone-mode: false
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: Bump major version
