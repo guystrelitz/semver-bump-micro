@@ -7,6 +7,9 @@ on:
         required: true
         type: string
 
+permissions:
+  contents: write
+
 jobs:
   bump-minor:
     runs-on: ubuntu-latest
@@ -19,11 +22,11 @@ jobs:
         with:
           sparse-checkout: |
             ${{ env.TARGET_DIR }}/${{ env.TARGET_FILE }}
-          sparse-checkout-cone-mode: false
+          token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 1
 
       - name: Bump minor version
-        uses: guystrelitz/semver-bump-micro@v1
+        uses: guystrelitz/semver-bump-micro@main
         with:
           target_directory: ${{ env.TARGET_DIR }}
           target_file: ${{ env.TARGET_FILE }}

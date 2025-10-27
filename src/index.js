@@ -43,9 +43,9 @@ function bumpVersion() {
     let [major, minor, micro] = match.slice(1).map(Number);
 
     [major, minor, micro] =
-      INPUT_BUMP_TYPE === 'bump_major' ? [++major, 0, 0] :
-      INPUT_BUMP_TYPE === 'bump_minor' ? [major, ++minor, 0] :
-      [major, minor, ++micro];
+      INPUT_BUMP_TYPE === 'bump_major' ? [major + 1, 0, 0] :
+      INPUT_BUMP_TYPE === 'bump_minor' ? [major, minor + 1, 0] :
+      [major, minor, micro + 1];
 
     const newSemVer = `${major}.${minor}.${micro}`;
 
