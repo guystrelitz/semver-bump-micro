@@ -1,7 +1,7 @@
 # Workflow Examples
 This document provides example workflows for manually bumping major and minor semantic versions with a custom commit message.
 
-For the basic workflow to bump the micro version, an explanation of the architecture and more, see the [README](README.md).
+For the basic workflow to bump the micro version, an explanation of the architecture and more, see the [README](/).
 
 ## Bump minor workflow
 Place this workflow in your `.github/workflows` directory, eg as `.github/workflows/bump-minor.yml`.
