@@ -1,10 +1,14 @@
 # semver-bump-micro
 A GitHub Action that automatically increments the micro (patch) version of a semantic version number stored in a standalone file.
 
+The name is no longer quite accurate – it can also be used to bump the minor and major versions (see [WORKFLOWS](WORKFLOWS.md)).
+
 ## About semantic versioning
 Semantic versioning is a three-number version numbering scheme. eg the version:
 
+```
   1.2.3456
+```
 
 indicates:
 - major version 1
@@ -37,9 +41,9 @@ This action reads the semantic version number, increments the micro version and 
 The supplied workflow (below) checks out your codebase, calls the action and commits the change. It is triggered on push to `main` (or any branch or branches you choose).
 
 ## Usage
-### Basic Workflow
+### Basic workflow
 Place this workflow in your `.github/workflows` directory.
-eg `.github/workflows/bump-version.yml`.
+eg `.github/workflows/bump-micro.yml`.
 
 ```yaml
 name: Bump Version
@@ -97,7 +101,7 @@ jobs:
           git push --force-with-lease
 ```
 
-### Workflow configuration guide
+#### Workflow configuration guide
 In the workflow file the following settings are required:
 
 | Setting             | Description                           |
@@ -111,17 +115,20 @@ In the workflow file the following settings are required:
 
 **⚠️ Do not remove `fetch-depth: 0`**. If you do so and retain `git commit --amend --no-edit`, the action is liable to flatten your entire history in GitHub. The next `git pull` will then flatten it on your development machine. Your history may well become unrecoverable.
 
-### Version File Format
+### Advanced usage – bumping minor and major versions
+As of tag v1.1.0 `semver-bump-micro` can also bump minor and major versions. See [WORKFLOWS](WORKFLOWS.md) for suitable workflows for these more advanced cases.
+
+## Version file format
 The version file must contain **exactly** a semantic version number with no additional content.
 
 The action is tolerant of a trailing line ending (both Unix \n and Windows \r\n), and will strip it when writing the new version.
 
-#### ✅ Valid formats:
+### ✅ Valid formats:
 - `1.2.3`
 - `0.0.0`
 - `10.20.30`
 
-#### ❌ Invalid formats:
+### ❌ Invalid formats:
 - `1.2           # missing patch version`
 - `1.2.3.4       # too many parts`
 - `v1.2.3        # has prefix`
@@ -136,12 +143,12 @@ The action is tolerant of a trailing line ending (both Unix \n and Windows \r\n)
 - **Increments on push to `main`, not for each commit**: The action focuses on push events rather than individual commits, which provides a useful level of versioning granularity.
 
 ## Development
-### Running Tests
+### Running tests
 ```bash
 npm test
 ```
 
-### Test Coverage
+### Test coverage
 The action includes tests covering:
 - Valid version formats
 - Invalid version formats  
