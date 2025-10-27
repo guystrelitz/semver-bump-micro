@@ -11,8 +11,6 @@ The name is no longer quite accurate – it can also be used to bump the minor a
   - [Workflow configuration guide](#workflow-configuration-guide)
   - [Advanced usage – bumping minor and major versions](#advanced-usage--bumping-minor-and-major-versions)
 - [Version file format](#version-file-format)
-  - [Valid formats](#valid-formats)
-  - [Invalid formats](#invalid-formats)
 - [Limitations](#limitations)
 - [Development](#development)
   - [Running tests](#running-tests)
@@ -140,12 +138,12 @@ The version file must contain **exactly** a semantic version number with no addi
 
 The action is tolerant of a trailing line ending (both Unix \n and Windows \r\n), and will strip it when writing the new version.
 
-### ✅ Valid formats:
+**✅ Valid formats:**
 - `1.2.3`
 - `0.0.0`
 - `10.20.30`
 
-### ❌ Invalid formats:
+**❌ Invalid formats:**
 - `1.2           # missing patch version`
 - `1.2.3.4       # too many parts`
 - `v1.2.3        # has prefix`
