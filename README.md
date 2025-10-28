@@ -1,11 +1,12 @@
-# semver-bump-micro
-A GitHub Action that automatically increments the micro (patch) version of a semantic version number stored in a standalone file.
+# Simple Semantic Versioning
+Automatically increments the micro (patch) version of a semantic version number stored in a standalone file, on push to main. Enables manual management of minor and major portions.
 
-The name is no longer quite accurate – it can also be used to bump the minor and major versions (see [WORKFLOWS](WORKFLOWS.md)).
+For workflows to manually bump minor and major versions, see [WORKFLOWS](WORKFLOWS.md).
 
 ## Contents
 - [About semantic versioning](#about-semantic-versioning)
-- [Overview of `semver-bump-micro`](#overview-of-semver-bump-micro)
+- [Overview](#overview)
+  - [A note on the repository name](#a-note-on-the-repository-name)
 - [Usage](#usage)
   - [Basic workflow](#basic-workflow)
   - [Workflow configuration guide](#workflow-configuration-guide)
@@ -36,12 +37,12 @@ When the minor version is incremented, the micro resets to 0. When the major is 
 
 It gives an indication of how far apart two versions are, eg when considering compatibility or an upgrade.
 
-## Overview of `semver-bump-micro`
+## Overview
 This action maintains a semantic version in GitHub by incrementing the micro version on each push to `main` (actually to any branch you choose).
 
-It is inspired by the work of - [PaulHatch/semantic-version](https://github.com/PaulHatch/semantic-version) and [yoichiro/gh-action-increment-value](https://github.com/yoichiro/gh-action-increment-value). However those two don't quite meet my needs. I want a semantic version rather than a simple counter, but I don't want to put content in my commit messages to manage it.
+It is inspired by the work of - [PaulHatch/semantic-version](https://github.com/PaulHatch/semantic-version) and [yoichiro/gh-action-increment-value](https://github.com/yoichiro/gh-action-increment-value). However those two don't quite meet my needs. I want a semantic version rather than a simple counter, but I don't want to add specific content in my commit messages to manage it.
 
-`semver-bump-micro` increments only the micro version. I've taken the view that this is the one that needs frequent automatic updating. Minor and major versions can be managed manually and intentionally.
+Simple Semantic Versioning increments only the micro version by default. I've taken the view that this is the one that needs frequent automatic updating. Minor and major versions can be managed manually and intentionally.
 
 It's designed to increment on pushes to main, not to count every commit. Incrementing on push strikes a good balance between automation and simplicity, while:
 1. reliably providing a simple, always-increasing version number for every available code version;
@@ -54,6 +55,11 @@ The semantic version is maintained in a version file that:
 This action reads the semantic version number, increments the micro version and writes it back to the file.
 
 The supplied workflow (below) checks out your codebase, calls the action and commits the change. It is triggered on push to `main` (or any branch or branches you choose).
+
+### A note on the repository name
+I originally built the action to increment only the micro portion of the version. Since tag v1.1.0 it can increment the minor and major versions also.
+
+The repository name reflects the original design purpose.
 
 ## Usage
 ### Basic workflow
@@ -131,7 +137,7 @@ In the workflow file the following settings are required:
 **⚠️ Do not remove `fetch-depth: 0`**. If you do so and retain `git commit --amend --no-edit`, the action is liable to flatten your entire history in GitHub. The next `git pull` will then flatten it on your development machine. Your history may well become unrecoverable.
 
 ### Advanced usage – bumping minor and major versions
-As of tag v1.1.0 `semver-bump-micro` can also bump minor and major versions. See [WORKFLOWS](WORKFLOWS.md) for suitable workflows for these more advanced cases.
+As of tag v1.1.0, this action can also bump minor and major versions. See [WORKFLOWS](WORKFLOWS.md) for suitable workflows for these more advanced cases.
 
 ## Version file format
 The version file must contain **exactly** a semantic version number with no additional content.

@@ -1,5 +1,5 @@
-name: Semantic Version Bump
-description: Increments the micro portion of a semver version number in a file.
+name: Simple Semantic Versioning
+description: Automatically increments the micro portion of a semver version number in a file, on push to main. Enables manual management of minor and major portions.
 
 branding:
   icon: git-commit
@@ -15,7 +15,6 @@ inputs:
   bump_type:
     description: Type of version bump to perform. If omitted, the micro version will be incremented.
     required: false
-    default: Default action is to increment the micro version. No need to specify bump_micro.
     options:
       - bump_minor
       - bump_major
