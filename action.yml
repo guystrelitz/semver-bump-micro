@@ -1,5 +1,5 @@
 name: Simple Semantic Versioning
-description: Automatically increments the micro portion of a semver version number in a file, on push to main. Enables manual management of minor and major portions.
+description: Manages semantic version number. Auto-increment micro version on push to main, manually manage minor and major versions.
 
 branding:
   icon: git-commit
