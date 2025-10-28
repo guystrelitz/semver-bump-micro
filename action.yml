@@ -1,6 +1,10 @@
 name: Semantic Version Bump
 description: Increments the micro portion of a semver version number in a file.
 
+branding:
+  icon: git-commit
+  color: orange
+
 inputs:
   target_directory:
     description: Directory containing the version file
